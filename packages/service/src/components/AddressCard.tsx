@@ -40,37 +40,32 @@ const AddressCard = ({
           <div className="w-[46px] h-[19px] text-xs font-medium text-center border border-gray text-gray">
             {isAdress ? "도로명" : "지번"}
           </div>
-          <div className="flex flex-col justify-start w-full gap-1">
-            <div className="text-xs font-normal text-gray">
-              {isShowKorean ? kSubZipZuso[0] : englishSubZipZuso[0]}
+          <div className={"flex flex-col justify-start w-full"}>
+            <div
+              className={`flex flex-col justify-start w-full gap-1 max-h-${
+                isShowAllSubZipZuso ? "none" : "5"
+              } overflow-hidden`}
+            >
+              {isShowKorean
+                ? kSubZipZuso.map((item) => (
+                    <div key={item} className="text-xs font-normal text-gray">
+                      {item}
+                    </div>
+                  ))
+                : englishSubZipZuso.map((item) => (
+                    <div key={item} className="text-xs font-normal text-gray">
+                      {item}
+                    </div>
+                  ))}
             </div>
-            {kSubZipZuso.length > 1 &&
-              (isShowAllSubZipZuso ? (
-                isShowKorean ? (
-                  kSubZipZuso
-                    .filter((item, i) => i >= 1)
-                    .map((item) => (
-                      <div className="text-xs font-normal text-gray">
-                        {item}
-                      </div>
-                    ))
-                ) : (
-                  englishSubZipZuso
-                    .filter((item, i) => i >= 1)
-                    .map((item) => (
-                      <div className="text-xs font-normal text-gray">
-                        {item}
-                      </div>
-                    ))
-                )
-              ) : (
-                <button
-                  className="text-xs font-normal text-highlight w-max"
-                  onClick={() => setIsShowAllSubZipZuso(true)}
-                >
-                  해당 위치의 지번 주소 2개 더 보기
-                </button>
-              ))}
+            {!isShowAllSubZipZuso && (
+              <button
+                className="text-xs font-normal text-highlight w-max"
+                onClick={() => setIsShowAllSubZipZuso(true)}
+              >
+                해당 위치의 지번 주소 2개 더 보기
+              </button>
+            )}
           </div>
         </div>
       )}
