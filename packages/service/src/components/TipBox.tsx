@@ -11,8 +11,8 @@ const TipBox = () => {
         </p>
       </div>
       <div className="flex flex-col gap-2 mt-4">
-        {TIPS.map((value, idx) => (
-          <div key={idx} className="flex flex-col gap-2">
+        {TIPS.map((value) => (
+          <div key={value.text} className="flex flex-col gap-2">
             <p className="text-black text-[14px] font-regular leading-[18px]">
               {value.text}
             </p>
