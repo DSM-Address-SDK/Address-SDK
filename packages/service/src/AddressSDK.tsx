@@ -1,16 +1,12 @@
 import Input from "components/Input";
-import { useInput } from "hooks/useInput";
+import { useState } from "react";
 
 function AddressSDK() {
-  const {
-    form: search,
-    onChange: onChangeSearch,
-    setForm: setSearch,
-  } = useInput("");
+  const [keyword, setKeyword] = useState("");
 
   return (
     <>
-      <Input value={search} onChange={onChangeSearch} setState={setSearch} />
+      <Input setKeyword={setKeyword} />
     </>
   );
 }
