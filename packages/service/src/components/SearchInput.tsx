@@ -3,6 +3,7 @@ import { InputHTMLAttributes, SetStateAction, useState } from "react";
 import AutoComplete from "./AutoComplete";
 import { useCombobox } from "downshift";
 import { hangulIncludes, chosungIncludes } from "@toss/hangul";
+import Parser from "html-react-parser";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   setKeyword: React.Dispatch<SetStateAction<string>>;
@@ -85,6 +86,22 @@ const SearchInput = ({ setKeyword, ...props }: InputProps) => {
     },
   });
 
+  function Highlight(textToSearch: string) {
+    if (textToSearch.includes(inputValue)) {
+      const searchString = inputValue.toLowerCase();
+      const startIndex = textToSearch.toLowerCase().indexOf(searchString);
+      const highlightedText =
+        textToSearch.substring(0, startIndex) +
+        "<b>" +
+        searchString +
+        "</b>" +
+        textToSearch.substring(startIndex + searchString.length);
+      return highlightedText;
+    } else {
+      return textToSearch;
+    }
+  }
+
   return (
     <>
       <form
@@ -128,8 +145,8 @@ const SearchInput = ({ setKeyword, ...props }: InputProps) => {
           items.map((item, index) => (
             <li key={index} {...getItemProps({ item, index })}>
               <AutoComplete>
-                <span className="text-[16px] font-regular text-ellipsis overflow-hidden whitespace-nowrap">
-                  {item.orgDisplay}
+                <span className="[&>b]:text-hightlight [&>b]:font-regular text-[16px] font-regular text-ellipsis overflow-hidden whitespace-nowrap">
+                  {Parser(Highlight(item.orgDisplay))}
                 </span>
               </AutoComplete>
             </li>
