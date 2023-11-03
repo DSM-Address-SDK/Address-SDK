@@ -88,14 +88,11 @@ const SearchInput = ({ setKeyword, ...props }: InputProps) => {
 
   function Highlight(textToSearch: string) {
     if (textToSearch.includes(inputValue)) {
-      const searchString = inputValue.toLowerCase();
-      const startIndex = textToSearch.toLowerCase().indexOf(searchString);
-      const highlightedText =
-        textToSearch.substring(0, startIndex) +
-        "<b>" +
-        searchString +
-        "</b>" +
-        textToSearch.substring(startIndex + searchString.length);
+      const highlightedText = textToSearch.replace(
+        inputValue,
+        `<b>${inputValue}</b>`
+      );
+
       return highlightedText;
     } else {
       return textToSearch;
