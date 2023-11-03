@@ -1,12 +1,11 @@
-import Input from "components/Input";
+import SearchInput from "components/SearchInput";
 import { useState } from "react";
 
 function AddressSDK() {
   const [keyword, setKeyword] = useState("");
-
   return (
     <>
-      <Input setKeyword={setKeyword} />
+      <SearchInput setKeyword={setKeyword} />
     </>
   );
 }
