@@ -42,8 +42,8 @@ const AddressCard = ({
           </div>
           <div className={"flex flex-col justify-start w-full"}>
             <div
-              className={`flex flex-col justify-start w-full gap-1 max-h-${
-                isShowAllSubZipZuso ? "none" : "5"
+              className={`flex flex-col justify-start w-full gap-1 ${
+                !isShowAllSubZipZuso && "max-h-5"
               } overflow-hidden`}
             >
               {isShowKorean
