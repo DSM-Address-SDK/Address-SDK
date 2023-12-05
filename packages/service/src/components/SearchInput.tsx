@@ -4,6 +4,7 @@ import AutoComplete from "./AutoComplete";
 import { useCombobox } from "downshift";
 import { hangulIncludes, chosungIncludes } from "@toss/hangul";
 import Parser from "html-react-parser";
+import { useNavigate } from "react-router-dom";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   setKeyword: React.Dispatch<SetStateAction<string>>;
@@ -53,8 +54,10 @@ const addressList = [
   },
 ];
 
-const SearchInput = ({ setKeyword, ...props }: InputProps) => {
+const SearchInput = ({ keyword, setKeyword, ...props }: InputProps) => {
   const [items, setItems] = useState(addressList);
+
+  const navigate = useNavigate();
 
   function getAddressFilter(inputValue?: string) {
     // any는 명세 나오면 타입 지정할 예정
@@ -105,6 +108,7 @@ const SearchInput = ({ setKeyword, ...props }: InputProps) => {
         onSubmit={(e) => {
           e.preventDefault();
           setKeyword(inputValue);
+          navigate(`/address`);
         }}
       >
         <div className="relative w-full border-b border-black text-base pl-4 pr-[76px] bg-white">
@@ -116,11 +120,13 @@ const SearchInput = ({ setKeyword, ...props }: InputProps) => {
             {...getInputProps()}
             {...props}
           />
-
           {!!inputValue && (
             <button
               type="button"
-              onClick={() => reset()}
+              onClick={() => {
+                navigate("/");
+                reset();
+              }}
               className="absolute right-12 top-3.5"
             >
               <img src={FAVICON_PATH["XBtn"]} />
