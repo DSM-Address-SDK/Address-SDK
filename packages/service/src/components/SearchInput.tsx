@@ -11,7 +11,7 @@ import { hangulIncludes, chosungIncludes } from "@toss/hangul";
 import Parser from "html-react-parser";
 import { useNavigate } from "react-router-dom";
 import { useAutoComplete } from "api/address";
-import useQueryDebounce from "hooks/useQueryDebounce";
+import useDebounceValue from "hooks/useDebounceValue";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   setKeyword: React.Dispatch<SetStateAction<string>>;
@@ -23,7 +23,6 @@ const SearchInput = ({ setKeyword, ...props }: InputProps) => {
   const navigate = useNavigate();
 
   function getAddressFilter(inputValue?: string) {
-    // any는 명세 나오면 타입 지정할 예정
     return function addressFilter(address: string) {
       return (
         !inputValue ||
@@ -50,7 +49,7 @@ const SearchInput = ({ setKeyword, ...props }: InputProps) => {
     },
   });
 
-  const debouncedSearchInput = useQueryDebounce(inputValue);
+  const debouncedSearchInput = useDebounceValue(inputValue);
   const { data } = useAutoComplete(debouncedSearchInput);
 
   useEffect(() => {
