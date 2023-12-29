@@ -54,7 +54,7 @@ const addressList = [
   },
 ];
 
-const SearchInput = ({ keyword, setKeyword, ...props }: InputProps) => {
+const SearchInput = ({ setKeyword, ...props }: InputProps) => {
   const [items, setItems] = useState(addressList);
 
   const navigate = useNavigate();
