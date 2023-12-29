@@ -1,73 +1,33 @@
 import { FAVICON_PATH } from "constants/asset";
-import { InputHTMLAttributes, SetStateAction, useState } from "react";
+import {
+  InputHTMLAttributes,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import AutoComplete from "./AutoComplete";
 import { useCombobox } from "downshift";
 import { hangulIncludes, chosungIncludes } from "@toss/hangul";
 import Parser from "html-react-parser";
 import { useNavigate } from "react-router-dom";
+import { useAutoComplete } from "api/address";
+import useDebounceValue from "hooks/useDebounceValue";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   setKeyword: React.Dispatch<SetStateAction<string>>;
 }
 
-// 임시값
-const addressList = [
-  {
-    orgDisplay: "서울특별시 종로구 세종대로",
-    highlightedDisplay: "서울특별시 종로구 세종대로",
-  },
-  {
-    orgDisplay: "서울특별시 중구 세종대로",
-    highlightedDisplay: "서울특별시 중구 세종대로",
-  },
-  {
-    orgDisplay: "서울특별시 중구 세종대로1길",
-    highlightedDisplay: "서울특별시 중구 세종대로1길",
-  },
-  {
-    orgDisplay: "서울특별시 중구 세종대로2가길",
-    highlightedDisplay: "서울특별시 중구 세종대로2가길",
-  },
-  {
-    orgDisplay: "서울특별시 중구 세종대로2길",
-    highlightedDisplay: "서울특별시 중구 세종대로2길",
-  },
-  {
-    orgDisplay: "서울특별시 중구 세종대로2나길",
-    highlightedDisplay: "서울특별시 중구 세종대로2나길",
-  },
-  {
-    orgDisplay: "서울특별시 중구 세종대로3길",
-    highlightedDisplay: "서울특별시 중구 세종대로3길",
-  },
-  {
-    orgDisplay: "서울특별시 중구 세종대로4길",
-    highlightedDisplay: "서울특별시 중구 세종대로4길",
-  },
-  {
-    orgDisplay: "서울특별시 중구 세종대로5길",
-    highlightedDisplay: "서울특별시 중구 세종대로5길",
-  },
-  {
-    orgDisplay: "경기도 여주시 세종대왕면",
-    highlightedDisplay: "경기도 여주시 세종대왕면",
-  },
-];
-
 const SearchInput = ({ setKeyword, ...props }: InputProps) => {
-  const [items, setItems] = useState(addressList);
+  const [items, setItems] = useState<string[]>([]);
 
   const navigate = useNavigate();
 
   function getAddressFilter(inputValue?: string) {
-    // any는 명세 나오면 타입 지정할 예정
-    return function addressFilter(address: any) {
+    return function addressFilter(address: string) {
       return (
         !inputValue ||
-        hangulIncludes(address.orgDisplay, inputValue) ||
-        chosungIncludes(address.orgDisplay, inputValue) ||
-        hangulIncludes(address.highlightedDisplay, inputValue) ||
-        chosungIncludes(address.highlightedDisplay, inputValue)
+        hangulIncludes(address, inputValue) ||
+        chosungIncludes(address, inputValue)
       );
     };
   }
@@ -81,13 +41,20 @@ const SearchInput = ({ setKeyword, ...props }: InputProps) => {
     reset,
   } = useCombobox({
     onInputValueChange({ inputValue }) {
-      setItems(addressList.filter(getAddressFilter(inputValue)));
+      setItems(data?.items.filter(getAddressFilter(inputValue)) || []);
     },
     items,
     itemToString(item) {
-      return item ? item.orgDisplay : "";
+      return item || "";
     },
   });
+
+  const debouncedSearchInput = useDebounceValue(inputValue);
+  const { data } = useAutoComplete(debouncedSearchInput);
+
+  useEffect(() => {
+    setItems(data?.items || []);
+  }, [data]);
 
   function Highlight(textToSearch: string) {
     if (textToSearch.includes(inputValue)) {
@@ -148,8 +115,8 @@ const SearchInput = ({ setKeyword, ...props }: InputProps) => {
           items.map((item, index) => (
             <li key={index} {...getItemProps({ item, index })}>
               <AutoComplete>
-                <span className="[&>b]:text-hightlight [&>b]:font-regular text-[16px] font-regular text-ellipsis overflow-hidden whitespace-nowrap">
-                  {Parser(Highlight(item.orgDisplay))}
+                <span className="[&>b]:text-highlight [&>b]:font-regular text-[16px] font-regular text-ellipsis overflow-hidden whitespace-nowrap">
+                  {Parser(Highlight(item))}
                 </span>
               </AutoComplete>
             </li>
