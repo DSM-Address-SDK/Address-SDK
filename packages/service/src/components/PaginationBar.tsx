@@ -1,31 +1,33 @@
+import { SetStateAction } from "react";
+
 interface PaginationBarProps {
-  SearchResultCount: number;
+  countAddressPage: number;
   //검색결과 주소목록 길이입니다.
   choosedPage: number;
-  setChoosedPage: React.Dispatch<React.SetStateAction<number>>;
+  setChoosedPage: React.Dispatch<SetStateAction<number>>;
 }
 
 const PaginationBar = ({
-  SearchResultCount,
+  countAddressPage,
   choosedPage,
   setChoosedPage,
 }: PaginationBarProps) => {
   const numberArr = Array.from(
-    { length: Math.ceil(SearchResultCount / 10) },
+    { length: Math.min(countAddressPage, 5) },
     (_, index) => index + 1
   );
 
   return (
     <div className="w-full flex justify-center gap-2 my-[30px]">
-      {numberArr.map((num) => (
+      {numberArr.map((index) => (
         <div
-          onClick={() => setChoosedPage(num)}
-          key={num}
-          className={` ${choosedPage === num ? "text-white" : "text-black"} ${
-            choosedPage === num ? "bg-highlight" : "bg-white"
+          onClick={() => setChoosedPage(index)}
+          key={index}
+          className={` cursor-pointer ${choosedPage === index ? "text-white" : "text-black"} ${
+            choosedPage === index ? "bg-highlight" : "bg-white"
           } flex items-center justify-center w-[30px] h-[30px] rounded-xl text-[16px] font-bold`}
         >
-          {num}
+          {index}
         </div>
       ))}
     </div>
