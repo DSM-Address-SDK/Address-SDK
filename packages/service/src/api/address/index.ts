@@ -24,21 +24,19 @@ export const useAutoComplete = (keyword: string) => {
 };
 
 export const GetSearchAddress = (page: number, keyword: string) => {
-  const response = async () => {
+  return useQuery(["search", page, keyword], async () => {
     const { data } = await instance.get<SearchAddressResponse>(
       `${ROUTER}/search?page=${page}&keyword=${keyword}`
     );
     return data;
-  };
-  return useQuery(["search", page, keyword], response);
+  });
 };
 
 export const GetCountAddressPage = (keyword: string) => {
-  const response = async () => {
+  return useQuery(["count", keyword], async () => {
     const { data } = await instance.get<CountAddressResponse>(
       `${ROUTER}/search/count?keyword=${keyword}`
     );
     return data;
-  };
-  return useQuery(["count", keyword], response);
+  });
 };
