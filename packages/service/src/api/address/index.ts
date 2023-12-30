@@ -23,13 +23,11 @@ export const useAutoComplete = (keyword: string) => {
   );
 };
 
-export const GetSearchAddress = (page: number, keyword: string) => {
-  return useQuery(["search", page, keyword], async () => {
-    const { data } = await instance.get<SearchAddressResponse>(
-      `${ROUTER}/search?page=${page}&keyword=${keyword}`
-    );
-    return data;
-  });
+export const GetSearchAddress  = async (page: number, keyword: string) => {
+  const { data } = await instance.get<SearchAddressResponse>(
+    `${ROUTER}/search?page=${page}&keyword=${keyword}`
+  );
+  return data;
 };
 
 export const GetCountAddressPage = (keyword: string) => {
