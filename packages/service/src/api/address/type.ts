@@ -21,5 +21,5 @@ export interface SearchAddressResponse {
 }
 
 export interface CountAddressResponse {
-  total_count: number;
+  totalPageCount: number;
 }
