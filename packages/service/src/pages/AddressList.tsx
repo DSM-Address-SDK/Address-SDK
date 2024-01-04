@@ -4,6 +4,7 @@ import { GetCountAddressPage, GetSearchAddress } from "api/address";
 import AddressCard from "components/AddressCard";
 import PaginationBar from "components/PaginationBar";
 import AddressSearchWarning from "components/AddressSearchWarning";
+import SkeletonCard from "components/SkeletonCard";
 
 interface AddressListProps {
   keyword: string;
@@ -13,7 +14,7 @@ const AddressList = ({ keyword }: AddressListProps) => {
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const { data: countAddressPage } = GetCountAddressPage(keyword ?? "");
-  const { data: searchAddress } = useQuery({
+  const { isLoading: isLoadingSearchAddres, data: searchAddress } = useQuery({
     queryKey: ["search", keyword, page],
     queryFn: () => GetSearchAddress(page, keyword),
     keepPreviousData: true,
@@ -28,12 +29,17 @@ const AddressList = ({ keyword }: AddressListProps) => {
       });
     }
   }, [countAddressPage]);
-
+  console.log(isLoadingSearchAddres);
   return (
     <>
       {countAddressPage?.totalPageCount !== 0 && searchAddress?.items && (
         <AddressSearchWarning />
       )}
+
+      {isLoadingSearchAddres &&
+        Array.from({ length: 5 }, (_, index) => index + 1).map((i) => (
+          <SkeletonCard key={i} />
+        ))}
       {searchAddress?.items.map((item) => (
         <AddressCard key={item.representAddressNameKor} {...item} />
       ))}
